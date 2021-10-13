@@ -1,5 +1,7 @@
 {
   "REPO": "auto_insurance_service",
   "ACTION": "findManyRecordsInDatabase",
-  "TABLENAME": "user"
+  "TABLENAME": "user",
+  "CURRENTDATE": "11 Oct 2021",
+  "BRANCH": "first-test"
 }
