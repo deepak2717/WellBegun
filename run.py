@@ -5,7 +5,7 @@ from csv import reader
 from jinja2 import Template
 from github import Github
 import os
-import git
+# import git
 from pprint import pprint
 
 """
@@ -16,13 +16,13 @@ Reads input request and creates the fragments to generate the code for API devel
 
 """
 # Read the the input file Parse the json and create the respective fragment structure
-
-with open(f'input/request_10012021_001.json', "r") as input_handle:
+print("I am in script")
+with open(f'../input/output.json', "r") as input_handle:
     input_data = json.load(input_handle)
 
 # Get the Repo to be updated
 
-token = os.getenv('GITHUB_TOKEN', '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')
+token = os.getenv('GITHUB_TOKEN', 'xxxxxxxxx')
 git_token = Github(token)
 repo = git_token.get_repo(f'dsingh-devops/{input_data["REPO"]}')
   
@@ -46,7 +46,7 @@ def push(path, message, content, branch, update=False):
     else:  # If file doesn't exist, create it
         repo.create_file(path, message, content, branch=branch)  # Add, commit and push branch
 
-with open(f'./conf/{input_data["REPO"]}/{input_data["ACTION"]}.csv', "r") as csv_file:
+with open(f'../conf/{input_data["REPO"]}/{input_data["ACTION"]}.csv', "r") as csv_file:
     csv_reader = reader(csv_file)
     for row in csv_reader:
       file = row[0]
@@ -66,7 +66,7 @@ with open(f'./conf/{input_data["REPO"]}/{input_data["ACTION"]}.csv', "r") as csv
               print("Pushed to branch :", file)
                           
       else:
-        with open(row[2], "r") as fragfile:
+        with open(row[2], "r", encoding='utf-8' ) as fragfile:
           data_list_template = []
           lines = fragfile.readlines()
           for line in lines:

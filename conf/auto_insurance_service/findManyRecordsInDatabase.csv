@@ -1,2 +1,2 @@
-docs/README.md,READMETOKEN,./code_fragments/auto_insurance_service/readme.frag
-src/main/scala/db/{{ TABLENAME }}_reader.scala,,./code_fragments/auto_insurance_service/table_reader.frag
+docs/README.md,READMETOKEN,../code_fragments/auto_insurance_service/readme.frag
+src/main/scala/db/{{ TABLENAME }}_reader.scala,,../code_fragments/auto_insurance_service/table_reader.frag
