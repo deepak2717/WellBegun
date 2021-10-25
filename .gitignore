@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 .idea/
 .node_modules/
-
+frontend/node_modules
 
