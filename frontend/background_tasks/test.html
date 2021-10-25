@@ -1,0 +1,9 @@
+<script>
+const { ipcRenderer } =  require('electron');
+
+ipcRenderer.on('START_PROCESSING', (event, args) => {
+    ipcRenderer.send('MESSAGE_FROM_BACKGROUND', { message: 123456 });
+});
+
+ipcRenderer.send('BACKGROUND_READY');
+</script>

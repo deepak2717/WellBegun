@@ -1,0 +1,32 @@
+<script>
+	const { PythonShell } = require('python-shell');
+	const { ipcRenderer } = require('electron');
+	const path = require('path');
+
+	ipcRenderer.on('START_PROCESSING', (event, args) => {
+		const { data } = args;
+		console.log("args" + args.data);
+		let pyshell = new PythonShell(path.join(__dirname, '/../../backend/run.py'), {
+			pythonPath: 'python',
+			args: [data]
+		});
+
+		pyshell.send(JSON.stringify([data]))
+
+		//console.log("pyshell" + pyshell);
+
+		pyshell.on('message', function (results) {
+			console.log(results);
+			ipcRenderer.send('MESSAGE_FROM_BACKGROUND', { message: "Script run successfully" });
+		})
+
+		pyshell.end(function (err) {
+			if (err) {
+				throw err;
+			};
+			console.log('finished');
+		});
+	});
+
+	ipcRenderer.send('BACKGROUND_READY');
+</script>
