@@ -92,6 +92,33 @@ ipcMain.on('MESSAGE_FROM_BACKGROUND', (event, args) => {
 	mainWindow.webContents.send('MESSAGE_FROM_BACKGROUND_VIA_MAIN', args.message);
 });
 
+// this event listener will listen for the import start command 
+ipcMain.on('START_PR_IMPORT_PROCESS', (event, args) => {
+	const importPRFIlesUrl = url.format({
+		pathname: path.join(__dirname, `../background_tasks/importPrFiles.html`),
+		protocol: 'file',
+		slashes: true,
+	});
+	hiddenWindow = new BrowserWindow({
+		show: true,
+		webPreferences: {
+			nodeIntegration: true,
+			contextIsolation: false
+		},
+	});
+	console.log(importPRFIlesUrl)
+	hiddenWindow.loadURL(importPRFIlesUrl);
+
+	hiddenWindow.webContents.openDevTools();
+
+	hiddenWindow.on('closed', () => {
+		hiddenWindow = null;
+	});
+
+	cache.data = args.jsonfile;
+	console.log(cache.data);
+})
+
 ipcMain.on('BACKGROUND_READY', (event, args) => {
 
 	event.reply('START_PROCESSING', {

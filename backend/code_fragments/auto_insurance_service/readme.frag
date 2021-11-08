@@ -1,1 +1,0 @@
-{{ CURRENTDATE }}: Added findManyRecordsInDatabase for {{TABLENAME}} table

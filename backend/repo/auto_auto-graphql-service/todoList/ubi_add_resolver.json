@@ -1,0 +1,6 @@
+[
+    {
+        "fileName": "src/main/feature/usageBasedInsurance/{{CLASSNAME_CAMEL}}.index.ts",
+        "action": "Verify response interface is correct"
+    }
+]

@@ -1,0 +1,10 @@
+[
+    {
+        "fileName": "service-settings/overrides/profiles/{{JOBNAME_HYPHENATED}}-production-overrides.yml",
+        "action": "Update the cron schedule"
+    },
+    {
+        "fileName": "src/main/scala/com/creditkarma/autos/ubi/reporting/{{JOBNAME_CAPITAL}}Job.scala",
+        "action": "Update run method"
+    }
+]

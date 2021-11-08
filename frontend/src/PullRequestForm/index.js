@@ -1,29 +1,23 @@
 import React, { Component } from 'react';
-import { Form, FloatingLabel, Row, Col, Stack, Button, Card, ListGroup, Container, Navbar, Nav } from 'react-bootstrap';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    useParams,
-  } from "react-router-dom";
-import PullRequestForm from './PullRequestForm'; 
-import NewTemplateForm from './NewTemplateForm'; 
-
+import { Form, FloatingLabel, Row, Col, Stack, Button, InputGroup, FormControl } from 'react-bootstrap';
 
 const electron = window.require('electron');
 const { ipcRenderer } = electron;
 const fs = window.require('fs');
 
 
-class App extends Component {
+class PullRequestForm extends Component {
 
 	constructor(props) {
 		super(props)
 		this.state = { 
 			REPO: '', 
 			ACTION: '', 
+			CLASSNAME_CAMEL: '', 
+			CLASSNAME_CAPITAL: '', 
+			JOBNAME_CAPITAL: '', 
+			JOBNAME_HYPHENATED: '', 
 			BRANCH: '', 
-			COMMIT_MESSAGE: '',
 			repoNames: [],
 			actions: [],
 			inputs:[]
@@ -40,6 +34,7 @@ class App extends Component {
 		this.setState({
 			"REPO": repoNames[0]
 		})
+		console.log(this.state)
 		this.setActions(repoNames[0])
 	}
 
@@ -59,43 +54,23 @@ class App extends Component {
 			"ACTION": actions[0]
 		})
 		this.setInputs(actions[0], repoName)
-		this.hideTodoList()
 	}
 
 	setInputs(actionName, repoName = this.state.REPO) {
+		console.log("set inputs")
+		console.log(actionName)
+		console.log(repoName)
 		let rawdata = fs.readFileSync('../backend/repo/'+ repoName + '/mapping/' + actionName + '.json');
 		let inputMapping = JSON.parse(rawdata);
+		console.log(inputMapping);
 		this.setState({
 			inputs: inputMapping
-		})
-		this.hideTodoList()
-	}
-
-	hideTodoList(){
-		this.setState({
-			todoList: undefined
-		})
-	}
-
-	showTodoList() {
-		let rawdata = fs.readFileSync('../backend/repo/'+ this.state.REPO + '/todoList/' + this.state.ACTION + '.json');
-		let todoList = JSON.parse(rawdata);
-		todoList.forEach( todoListItem => {
-			this.state.inputs.forEach( inputMap => {
-				const stringToFind = '{{' + inputMap.fragmentKey + '}}'
-				if( todoListItem.fileName.search(stringToFind) > -1){
-					const fileNameEdited = todoListItem.fileName.replace(stringToFind, this.state[inputMap.fragmentKey])
-					todoListItem.fileNameEdited = fileNameEdited
-				}
-			})
-		})
-		this.setState({
-			todoList
 		})
 	}
 
 	handleSubmit(event) {
 		console.log("SUBMIT")
+		console.log(this.state)
 		// const { REPO, ACTION, CLASSNAME_CAMEL, CLASSNAME_CAPITAL, JOBNAME_CAPITAL, JOBNAME_HYPHENATED, BRANCH } = this.state
 		event.preventDefault()
 		let inputAlertText = ''
@@ -107,7 +82,6 @@ class App extends Component {
 		  REPO : ${this.state.REPO}
 		  ACTION : ${this.state.ACTION}
 		  ${inputAlertText}BRANCH : ${this.state.BRANCH}
-		  COMMIT MESSAGE : ${this.state.COMMIT_MESSAGE} 
 		`)
 
 
@@ -125,17 +99,18 @@ class App extends Component {
 		 	jsonfile: jsonContent,
 			// number: 25,
 		});
-
-		this.showTodoList()
 	}
 
 	handleChange(event) {
 		console.log("handlechange")
+		console.log(event.target.name)
+		console.log(event.target.value)
 		this.setState({
 			// Computed property names
 			// keys of the objects are computed dynamically
 			[event.target.name]: event.target.value
 		})
+		console.log(this.state)
 		
 		switch(event.target.name){
 			case "REPO": 
@@ -171,73 +146,70 @@ class App extends Component {
 
 	createInputs(){
 		return this.state.inputs.map( inputObj => {
+			console.log(inputObj);
 			return (
-			<Form.Group as={Row} controlId={inputObj.fragmentKey} key={inputObj.fragmentKey}>
-				<Form.Label column md="auto">
-					{inputObj.inputName}
-				</Form.Label>
-				<Col sm="8">
-				<Form.Control name={inputObj.fragmentKey} type="text" placeholder={inputObj.description} onChange={this.handleChange} value={this.state[inputObj.fragmentKey]}/>
-				</Col>
-			</Form.Group>
+            <InputGroup>
+                <InputGroup.Text id="inputGroup-sizing-default">{inputObj.inputName}</InputGroup.Text>
+                <FormControl
+                  aria-label="Default"
+                  aria-describedby="inputGroup-sizing-default"
+                  name={inputObj.fragmentKey} type="text" placeholder={inputObj.description} onChange={this.handleChange} value={this.state[inputObj.fragmentKey]}
+                />
+            </InputGroup>
 			)
 		})
 	}
 
-	renderTodoList() {
-		if( this.state.todoList){
-			return (
-				<Card>
-					<Card.Header as="h5">TODO List</Card.Header>
-					<Card.Body>
-						<Card.Text>
-							<ListGroup as="ol" numbered>
-								{this.state.todoList.map( todoItem => {
-									return (
-										<ListGroup.Item as="li" className="d-flex justify-content-between align-items-start" key={todoItem.fileName}>
-											<div className="ms-2 me-auto">
-											<div className="fw-bold">{todoItem.fileNameEdited}</div>
-												{todoItem.action}
-											</div>
-										</ListGroup.Item>
-									)
-								})}
-							</ListGroup>
-						</Card.Text>
-					</Card.Body>
-				</Card>
-			)
-		}
-		return null
-	}
-
 	render() {
 		return (
-			<Container>
-				<Router>
+            <Form onSubmit={this.handleSubmit}>
+                <Stack gap={3}>
+                    <Row className="mt-3">
+                        <Col>
+                            <FloatingLabel controlId="floatingSelect" label="Repo Name">
+                                <Form.Control as="select" custom onChange={this.handleChange} aria-label="Default select example" name='REPO'>
+                                    {this.state.repoNames.map( opt => (
+                                        <option value={opt} key={opt}>{opt}</option>
+                                    ))}
+                                </Form.Control>
+                            </FloatingLabel>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <FloatingLabel controlId="floatingSelect" label="Action">
+                                <Form.Control as="select" custom onChange={this.handleChange} aria-label="Default select example" name='ACTION'>
+                                    {this.state.actions.map( opt => (
+                                        <option value={opt} key={opt}>{opt}</option>
+                                    ))}
+                                </Form.Control>
+                            </FloatingLabel>
+                        </Col>
+                    </Row>
 
-				<Navbar bg="light" variant="light">
-					<Container>
-					<Navbar.Brand href="/">Well Begun</Navbar.Brand>
-					<Nav className="me-auto">
-					<Nav.Link href="/">Create Pull Request</Nav.Link>
-					<Nav.Link href="/new-template">Create New Template</Nav.Link>
-					</Nav>
-					</Container>
-				</Navbar>
-				<Switch>
-					<Route exact path="/">
-						<PullRequestForm />
-					</Route>
-					<Route path="/new-template">
-						<NewTemplateForm />
-					</Route>
-				</Switch>
-				</Router>
-			</Container>
-	
+                    {this.createInputs()}      
+
+                    <InputGroup>
+                        <InputGroup.Text id="inputGroup-sizing-default">Branch Name Hyphenated</InputGroup.Text>
+                        <FormControl
+                        aria-label="Default"
+                        aria-describedby="inputGroup-sizing-default"
+                        name='BRANCH' 
+                        type="text" 
+                        placeholder="Name of branch created in GitHub. ex: add-new-feature" 
+                        onChange={this.handleChange} 
+                        value={this.state.BRANCH}
+                        />
+                    </InputGroup>
+
+                    <Button variant="secondary" type="submit" value='SUBMIT'>
+                        Submit
+                    </Button>
+        
+                </Stack>
+            </Form>
 		);
 	}
 }
 
-export default App;
+export default PullRequestForm;

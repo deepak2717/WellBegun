@@ -1,0 +1,10 @@
+service-settings/default/profiles/{{JOBNAME_HYPHENATED}}.yml,,convoy_auto-insurance-service/code_fragments/falconcron_service_settings_default.frag
+service-settings/overrides/profiles/{{JOBNAME_HYPHENATED}}-production-overrides.yml,,convoy_auto-insurance-service/code_fragments/falconcron_service_settings_override.frag
+src/main/resources/{{JOBNAME_HYPHENATED}}-preprod.conf,,convoy_auto-insurance-service/code_fragments/falconcron_conf_preprod.frag
+src/main/resources/{{JOBNAME_HYPHENATED}}-production.conf,,convoy_auto-insurance-service/code_fragments/falconcron_conf_prod.frag
+src/main/resources/{{JOBNAME_HYPHENATED}}-test.conf,,convoy_auto-insurance-service/code_fragments/falconcron_conf_test.frag
+src/main/resources/{{JOBNAME_HYPHENATED}}.conf,,convoy_auto-insurance-service/code_fragments/falconcron_conf_common.frag
+src/main/scala/com/creditkarma/Main.scala,63,convoy_auto-insurance-service/code_fragments/falconcron_main_import.frag
+src/main/scala/com/creditkarma/Main.scala,177,convoy_auto-insurance-service/code_fragments/falconcron_main_run.frag
+src/main/scala/com/creditkarma/autos/ubi/reporting/{{JOBNAME_CAPITAL}}Job.scala,,convoy_auto-insurance-service/code_fragments/falconcron_class.frag
+service-settings/components-manifest.yml,35,convoy_auto-insurance-service/code_fragments/falconcron_component_manifest.frag

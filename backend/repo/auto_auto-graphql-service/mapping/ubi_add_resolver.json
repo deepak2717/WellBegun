@@ -1,0 +1,20 @@
+[
+    {
+        "fragmentKey": "CLASSNAME_CAPITAL",
+        "inputName": "Classname Capitalized",
+        "type": "string",
+        "description": "The name of your resolver starting with a capital letter. ex: GetTripData"
+    },
+    {
+        "fragmentKey": "CLASSNAME_CAMEL",
+        "inputName": "Classname Camel Case",
+        "type": "string",
+        "description": "The name of your resolver starting with a lowercase letter. ex: getTripData"
+    },
+    {
+        "fragmentKey": "CLASSNAME_SPACED",
+        "inputName": "Classname With Spaces",
+        "type": "string",
+        "description": "The name of your resolver spaced out. ex: get trip data"
+    }
+]

@@ -1,0 +1,14 @@
+[
+    {
+        "fragmentKey": "JOBNAME_CAPITAL",
+        "inputName": "Jobname Capitalized",
+        "type": "string",
+        "description": "Name of cron job capitalized. ex: TestCronJob"
+    },
+    {
+        "fragmentKey": "JOBNAME_HYPHENATED",
+        "inputName": "Jobname Hyphenated",
+        "type": "string",
+        "description": "Name of cron job hyphenated. ex: test-cron-job"
+    }
+]

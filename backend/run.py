@@ -9,8 +9,6 @@ import os
 from pprint import pprint
 
 """
-Contributor : Deepak Kumar
-Reviewer
 
 Reads input request and creates the fragments to generate the code for API development
 
@@ -22,16 +20,16 @@ with open(f'../backend/input/output.json', "r") as input_handle:
 
 # Get the Repo to be updated
 
-token = os.getenv('GITHUB_TOKEN', 'xxxxxx')
-git_token = Github(token)
-repo = git_token.get_repo(f'dsingh-devops/{input_data["REPO"]}')
-  
+token = os.getenv('GITHUB_TOKEN', 'xxxxxxxxxxxxxx')  #TODO: Store this vault
+git_token = Github(base_url="https://code.corp.creditkarma.com/api/v3", login_or_token=token)
+repo = git_token.get_repo(f'ck-private/{input_data["REPO"]}')
+
 
 #Prepare file to be updated in the Repo
 
 def push(path, message, content, branch, update=False):
     author = "Srikant Bangalore"
-    source = repo.get_branch("main")
+    source = repo.get_branch("master")
     try: 
         branch_name = repo.get_branch(branch=input_data['BRANCH'])
         valid_branch = branch_name.name
@@ -46,27 +44,31 @@ def push(path, message, content, branch, update=False):
     else:  # If file doesn't exist, create it
         repo.create_file(path, message, content, branch=branch)  # Add, commit and push branch
 
-with open(f'../backend/conf/{input_data["REPO"]}/{input_data["ACTION"]}.csv', "r") as csv_file:
+with open(f'../backend/repo/{input_data["REPO"]}/action/{input_data["ACTION"]}.csv', "r") as csv_file:
     csv_reader = reader(csv_file)
     for row in csv_reader:
       file = row[0]
       if row[1] != "":
-        with open(row[2], "r") as fragfile:
+        with open("/Users/srikanth.bangalore/src/deveff_well-begun/backend/repo/" + row[2], "r") as fragfile:
           lines = fragfile.readlines()
+          file_from_master = repo.get_contents(row[0], ref=input_data['BRANCH'])
+          data = file_from_master.decoded_content.decode("utf-8")
+          data_list = data.split("\n")
+
+          my_data = ""
           for line in lines:
               j2_template = Template(line)
-              my_data = j2_template.render(input_data)
-              file_from_master = repo.get_contents(row[0], ref="main")
-              data = file_from_master.decoded_content.decode("utf-8")
-              data_list = data.split("\n")
-              index_readmetoken = data_list.index(row[1])
-              data_list.insert(index_readmetoken, my_data)
-              data = "\n".join(data_list)
-              push(file, "README created", data, input_data["BRANCH"], update=True)
-              print("Pushed to branch :", file)
+              my_data += j2_template.render(input_data)
+
+          data_list[int(row[1]):int(row[1])] = [my_data]
+          #index_readmetoken = data_list.index(row[1])
+          #data_list.insert(index_readmetoken, my_data)
+          data = "\n".join(data_list)
+          push(file, input_data["COMMIT_MESSAGE"] + file, data, input_data["BRANCH"], update=True)
+          print("Pushed to branch :", file)
                           
       else:
-        with open(row[2], "r", encoding='utf-8' ) as fragfile:
+        with open("/Users/srikanth.bangalore/src/deveff_well-begun/backend/repo/" + row[2], "r", encoding='utf-8' ) as fragfile:
           data_list_template = []
           lines = fragfile.readlines()
           for line in lines:
@@ -84,7 +86,7 @@ with open(f'../backend/conf/{input_data["REPO"]}/{input_data["ACTION"]}.csv', "r
                 update=False
           except:
               update=False
-          push(final_file, "Scala file updated", data, input_data["BRANCH"], update=update)
+          push(final_file, input_data["COMMIT_MESSAGE"], data, input_data["BRANCH"], update=update)
           print("Pushed to branch :", final_file)
           
 

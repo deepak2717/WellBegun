@@ -1,0 +1,4 @@
+src/main/feature/usageBasedInsurance/{{CLASSNAME_CAMEL}}.index.ts,,auto_auto-graphql-service/code_fragments/ubi_index.frag
+src/test/unit/feature/usageBasedInsurance/{{CLASSNAME_CAMEL}}.test.ts,,auto_auto-graphql-service/code_fragments/ubi_test.frag
+src/main/feature/usageBasedInsurance/resolver.ts,144,auto_auto-graphql-service/code_fragments/ubi_resolver_return.frag
+src/main/feature/usageBasedInsurance/resolver.ts,26,auto_auto-graphql-service/code_fragments/ubi_resolver_import.frag
