@@ -22,7 +22,7 @@ with open(f'../backend/input/output.json', "r") as input_handle:
 
 # Get the Repo to be updated
 
-token = os.getenv('GITHUB_TOKEN', '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')
+token = os.getenv('GITHUB_TOKEN', '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')
 git_token = Github(token)
 repo = git_token.get_repo(f'dsingh-devops/{input_data["REPO"]}')
   
